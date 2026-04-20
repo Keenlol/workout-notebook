@@ -1,0 +1,184 @@
+classDiagram
+
+    %% ════════════════════════════════
+    %%  DESIGN PATTERN 1 — SINGLETON
+    %% ════════════════════════════════
+    class DataStore {
+        -instance : DataStore$
+        -splits : List~Split~
+        -sessions : List~WorkoutSession~
+        -observers : List~WorkoutObserver~
+        -DataStore()
+        +getInstance() DataStore$
+        +addObserver(o : WorkoutObserver) void
+        -notifyObservers() void
+        +getSplits() List~Split~
+        +getSessions() List~WorkoutSession~
+        +addSession(s : WorkoutSession) void
+        +removeSession(i : int) void
+        +addSplit(s : Split) void
+        +updateSplit(s : Split) void
+        +removeSplit(name : String) void
+    }
+
+    %% ════════════════════════════════
+    %%  DESIGN PATTERN 2 — OBSERVER
+    %% ════════════════════════════════
+    class WorkoutObserver {
+        <<interface>>
+        +onDataChanged() void
+    }
+
+    class StatsCalculator {
+        -dataStore : DataStore
+        -trendPerSplit : Map~String,Double~
+        -lastVolumePerSplit : Map~String,Double~
+        -bySplit : Map~String,List~
+        +onDataChanged() void
+        +getTrend(name : String) double
+        +getLastVolume(name : String) double
+        +getLastVolumes(name : String, n : int) List~Double~
+        +getTrackedSplits() Set~String~
+    }
+
+    %% ════════════════════════════════
+    %%  DESIGN PATTERN 3 — FACTORY
+    %% ════════════════════════════════
+    class ScreenFactory {
+        -registry : Map~String,Screen~
+        +ScreenFactory(dataStore, stats)
+        +getScreen(pageName : String) Screen
+    }
+
+    %% ── Abstract UI base ──
+    class Screen {
+        <<abstract>>
+        #dataStore : DataStore
+        #crumb : String
+        #clearScreen() void
+        +render() void*
+        +activate(sc : Scanner) void*
+    }
+
+    class MainMenu {
+        -stats : StatsCalculator
+        +render() void
+        -renderCalendar() void
+        -renderTrends() void
+        -renderRecentHistory() void
+        -miniGraph(name : String) String
+        -computeDelta(sessions, idx) String
+    }
+
+    class LogWorkout {
+        +activate(sc : Scanner) void
+        -findLastSession(name : String) WorkoutSession
+        -findPrevLog(session, name) ExerciseLog
+    }
+
+    class EditSplit {
+        +activate(sc : Scanner) void
+        -renderSplits() void
+        -addSplit(name : String) void
+        -removeSplit(sc, name) void
+        -editSplit(sc, name) void
+    }
+
+    class History {
+        +activate(sc : Scanner) void
+        -computeDelta(sessions, idx) String
+    }
+
+    %% ── Model classes ──
+    class Split {
+        -name : String
+        -exercises : List~String~
+        +getName() String
+        +setName(name : String) void
+        +getExercises() List~String~
+        +addExercise(name : String) void
+        +removeExercise(name : String) void
+    }
+
+    class WorkoutSession {
+        -date : String
+        -splitName : String
+        -logs : List~ExerciseLog~
+        +getDate() String
+        +getSplitName() String
+        +getLogs() List~ExerciseLog~
+        +getTotalVolume() double
+    }
+
+    class ExerciseLog {
+        -exerciseName : String
+        -weight : double
+        -reps : int
+        -sets : int
+        +getExerciseName() String
+        +getWeight() double
+        +getReps() int
+        +getSets() int
+        +getVolume() double
+    }
+
+    %% ── Entry point ──
+    class App {
+        +main(args : String[]) void
+    }
+
+    %% ── UI rendering utility ──
+    class UI {
+        <<utility>>
+        +W : int$
+        +RESET : String$
+        +DIM : String$
+        +GREEN : String$
+        +RED : String$
+        +YELLOW : String$
+        +CYAN : String$
+        +BOLD : String$
+        +boxTop(crumb : String) String$
+        +boxLine(content : String) String$
+        +boxSep() String$
+        +boxBottom() String$
+        +sep() String$
+        +visibleLength(s : String) int$
+    }
+
+
+    %% ════════════════════════════════
+    %%  RELATIONSHIPS
+    %% ════════════════════════════════
+
+    %% Singleton — only accessed through getInstance()
+    App --> DataStore : uses getInstance()
+
+    %% Observer — DataStore notifies, StatsCalculator reacts
+    DataStore --> WorkoutObserver : notifies
+    StatsCalculator ..|> WorkoutObserver : implements
+    StatsCalculator --> DataStore : reads
+
+    %% Factory — App asks factory for a screen by page name
+    App --> ScreenFactory : uses
+    ScreenFactory ..> Screen : creates and returns
+    App --> MainMenu : renders directly
+
+    %% DataStore owns the data
+    DataStore "1" *-- "*" Split : owns
+    DataStore "1" *-- "*" WorkoutSession : owns
+
+    %% Inheritance — all screens extend Screen
+    Screen <|-- MainMenu
+    Screen <|-- LogWorkout
+    Screen <|-- EditSplit
+    Screen <|-- History
+    Screen --> DataStore : uses
+    Screen ..> UI : uses
+
+    %% MainMenu needs stats to render trends and mini-graph
+    MainMenu --> StatsCalculator : reads
+    App --> StatsCalculator : creates
+
+    %% Composition — a session is made of exercise logs
+    WorkoutSession "1" *-- "*" ExerciseLog : contains
