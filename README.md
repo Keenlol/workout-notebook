@@ -16,12 +16,7 @@ Final project for 2190103 Advanced Computer Programming.
 | Factory | `ScreenFactory` |
 
 ## Run
-```bash
-cd src
-javac *.java -d ../bin
-cd ../bin
-java App
-```
+Run the `App.java` file.
 
 ## Group — "I came, I saw, I withdraw"
 1. Punyathorn Nithithaniyamethakorn
