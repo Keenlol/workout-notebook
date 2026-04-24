@@ -1,28 +1,53 @@
-# workout-notebook
-A terminal-based workout tracker written in Java.  
-Final project for 2190103 Advanced Computer Programming.
+# Workout Notebook
 
-## How to run
-Run the `App.java` file.
+A terminal-based workout tracker written in Java.
+
+This project was developed as the final project for **2190103 Advanced Computer Programming**.
 
 ## Features
+
 - Log workouts by split (Push / Pull / Legs / etc.)
 - Track volume trends and progress over time
 - Add, edit, and remove splits and exercises
-- Data persists between sessions (CSV files)
+- Persist workout data between sessions using CSV files
 
-## Design Patterns
-| Pattern | Class |
-|---------|-------|
+## Project Structure
+
+- `src/` - Java source files
+- `data/` - persistent CSV data (`sessions.csv`, `splits.csv`)
+
+## Getting Started
+
+### Requirements
+
+- Java 8 or later
+
+### Run from source
+
+1. Compile:
+   - `javac src/*.java -d bin`
+2. Run:
+   - `java -cp bin App`
+
+## Design Patterns Used
+
+| Pattern | Implementation |
+| --- | --- |
 | Singleton | `DataStore` |
-| Observer | `WorkoutObserver` → `StatsCalculator` |
+| Observer | `WorkoutObserver` -> `StatsCalculator` |
 | Factory | `ScreenFactory` |
 
-## Class diagram
-Pdf version avaliable [here](class_diagram.pdf)
-![class diagram](class_diagram_image.png)
+## Class Diagram
 
-## Group — "I came, I saw, I withdraw"
+- PDF version: [class_diagram.pdf](class_diagram.pdf)
+- Image preview:
+
+![Class diagram](class_diagram_image.png)
+
+## Team
+
+**Group: "I came, I saw, I withdraw"**
+
 1. Punyathorn Nithithaniyamethakorn
 2. Pannathart Isarabhakdi
 3. Chetphisuth Tongpa
