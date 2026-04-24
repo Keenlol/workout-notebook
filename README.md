@@ -4,7 +4,7 @@ A terminal-based workout tracker written in Java.
 
 This project was developed as the final project for **2190103 Advanced Computer Programming**. 
 
-You can watch the [presentation video](https://drive.google.com/file/d/1zx7-o6jtdGRzHai2521GmB_BvK5tp9Nx/view?usp=share_link) for the demo.
+You can watch the presentation video [here](https://drive.google.com/file/d/1zx7-o6jtdGRzHai2521GmB_BvK5tp9Nx/view?usp=share_link)
 
 ![ScreenShot](demo_screenshot.png)
 
